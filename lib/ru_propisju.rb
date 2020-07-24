@@ -544,8 +544,16 @@ module RuPropisju
     options[:always_show_fraction] ||= false
 
     locale_data = pick_locale(TRANSLATIONS, locale)
-    integrals = locale_data[integrals_key]
-    fractions = locale_data[fractions_key]
+    integrals = if integrals_key.is_a? Array
+                  integrals_key
+                else
+                  locale_data[integrals_key]
+                end
+    fractions = if fractions_key.is_a? Array
+                  fractions_key
+                else
+                  locale_data[fractions_key]
+                end
 
     return zero(locale_data, integrals, fractions, fraction_as_number, integrals_as_number, options) if amount.zero?
 
@@ -789,7 +797,7 @@ module RuPropisju
     end
 
     if amount / fractions.first.last >= 1000
-      raise "Amount is too large" 
+      raise "Amount is too large"
     end
 
     # Единицы обрабатываем отдельно
